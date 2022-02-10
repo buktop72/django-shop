@@ -227,6 +227,7 @@ class BasketView(APIView):
 
         items_sting = request.data.get('items')
         if items_sting:
+            print(items_sting)
             try:
                 items_dict = load_json(items_sting)
             except ValueError:

@@ -30,47 +30,48 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Shop)
 class ShopAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'url', 'user', 'state']
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name']
+
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name', 'category']
 
 
 @admin.register(ProductInfo)
 class ProductInfoAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'model', 'external_id', 'shop', 'quantity', 'price', 'price_rrc']
 
 
 @admin.register(Parameter)
 class ParameterAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'name']
 
 
 @admin.register(ProductParameter)
 class ProductParameterAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'parameter', 'value']
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'user', 'dt', 'state', 'contact']
 
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'order', 'quantity']
 
 
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'user', 'city', 'street', 'house', 'structure', 'building', 'apartment', 'phone']
 
 
 @admin.register(ConfirmEmailToken)
