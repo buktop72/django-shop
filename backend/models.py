@@ -96,6 +96,11 @@ USER_TYPE_CHOICES = (
 #         ordering = ('email',)
 
 
+"""
+Чтобы получить доступ к администратору или добавить пользователя, необходимо явно определить этот
+функционал через менеджера пользователей
+https://django.fun/tutorials/nastrojka-polzovatelskoj-modeli-django/
+"""
 class UserManager(BaseUserManager):
     """
     Миксин для управления пользователями
@@ -138,9 +143,9 @@ class User(AbstractUser):
     """
     Стандартная модель пользователей
     """
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = []  # список полей, которые будут обязательны для создания пользователя(унаследовано 'email')
     objects = UserManager()
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'email'  # имя поля в модели пользователя, которое используется в качестве уникального идентификатора
     email = models.EmailField(verbose_name='Email', max_length=40, unique=True)
     username = None
     company = models.CharField(verbose_name='Компания', max_length=40, blank=True)

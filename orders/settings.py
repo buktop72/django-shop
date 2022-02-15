@@ -29,6 +29,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # 'send_email.apps.SendEmailConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_rest_passwordreset',
+
 
     'backend.apps.BackendConfig',
 ]
@@ -120,17 +122,33 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# backend.User - это то, что мы будем использовать для аутентификации пользователей
 AUTH_USER_MODEL = 'backend.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_USE_TLS = True
 
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_HOST_USER = 'netology-pdiplom@mail.ru'
-EMAIL_HOST_PASSWORD = 'i~8W4rdRPFlo'
-EMAIL_PORT = '465'
-EMAIL_USE_SSL = True
+# тут данные ящика, с которого отправляются письма юзерам
+# для GMAIL:
+# https://support.google.com/a/answer/176600?hl=ru#zippy=%2Cкак-использовать-smtp-сервер-gmail
+
+EMAIL_HOST = 'smtp.gmail.ru'
+EMAIL_HOST_USER = 'djangotest377@gmail.com'
+EMAIL_HOST_PASSWORD = 'Pa$Sw0rd'
+EMAIL_PORT = '587'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+# EMAIL_HOST = 'smtp.mail.ru'
+# EMAIL_HOST_USER = 'netology-pdiplom@mail.ru'
+# EMAIL_HOST_PASSWORD = 'i~8W4rdRPFlo'
+# EMAIL_PORT = '465'
+# EMAIL_USE_SSL = True
+# SERVER_EMAIL = EMAIL_HOST_USER
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

@@ -20,58 +20,60 @@ from backend.models import Shop, Category, Product, ProductInfo, Parameter, Prod
 from backend.serializers import UserSerializer, CategorySerializer, ShopSerializer, ProductInfoSerializer, \
     OrderItemSerializer, OrderSerializer, ContactSerializer
 # from backend.signals import new_user_registered, new_order
+from django.conf import settings
+from django.core.mail import send_mail
 
+# v1 not working
+class RegisterAccount(APIView):
+    """
+    Для регистрации покупателей
+    """
+    # Регистрация методом POST
+    def post(self, request, *args, **kwargs):
 
-# class RegisterAccount(APIView):
-#     """
-#     Для регистрации покупателей
-#     """
-#     # Регистрация методом POST
-#     def post(self, request, *args, **kwargs):
-#
-#         # проверяем обязательные аргументы
-#         if {'first_name', 'last_name', 'email', 'password', 'company', 'position'}.issubset(request.data):
-#             errors = {}
-#
-#             # проверяем пароль на сложность
-#
-#             try:
-#                 validate_password(request.data['password'])
-#             except Exception as password_error:
-#                 error_array = []
-#                 # noinspection PyTypeChecker
-#                 for item in password_error:
-#                     error_array.append(item)
-#                 return JsonResponse({'Status': False, 'Errors': {'password': error_array}})
-#             else:
-#                 # проверяем данные для уникальности имени пользователя
-#                 request.data._mutable = True
-#                 request.data.update({})
-#                 user_serializer = UserSerializer(data=request.data)
-#                 if user_serializer.is_valid():
-#                     # сохраняем пользователя
-#                     user = user_serializer.save()
-#                     user.set_password(request.data['password'])
-#                     user.save()
-#                     new_user_registered.send(sender=self.__class__, user_id=user.id)
-#                     return JsonResponse({'Status': True})
-#                 else:
-#                     return JsonResponse({'Status': False, 'Errors': user_serializer.errors})
-#
-#         return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
+        # проверяем обязательные аргументы
+        if {'first_name', 'last_name', 'email', 'password', 'company', 'position'}.issubset(request.data):
+            errors = {}
+
+            # проверяем пароль на сложность
+
+            try:
+                validate_password(request.data['password'])
+            except Exception as password_error:
+                error_array = []
+                # noinspection PyTypeChecker
+                for item in password_error:
+                    error_array.append(item)
+                return JsonResponse({'Status': False, 'Errors': {'password': error_array}})
+            else:
+                # проверяем данные для уникальности имени пользователя
+                request.data._mutable = True
+                request.data.update({})
+                user_serializer = UserSerializer(data=request.data)
+                if user_serializer.is_valid():
+                    # сохраняем пользователя
+                    user = user_serializer.save()
+                    user.set_password(request.data['password'])
+                    user.save()
+                    # new_user_registered.send(sender=self.__class__, user_id=user.id)
+                    return JsonResponse({'Status': True})
+                else:
+                    return JsonResponse({'Status': False, 'Errors': user_serializer.errors})
+
+        return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
 
 # v2
-class RegisterAccount(APIView):
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        data = {}
-        if serializer.is_valid():
-            user = serializer.save()
-            data['response'] = 'Successfully created a new User'
-            data['user'] = user.email
-        else:
-            data = serializer.errors
-        return Response(data)
+# class RegisterAccount(APIView):
+#     def post(self, request):
+#         serializer = UserSerializer(data=request.data)
+#         data = {}
+#         if serializer.is_valid():
+#             user = serializer.save()
+#             data['response'] = 'Successfully created a new User'
+#             data['user'] = user.email
+#         else:
+#             data = serializer.errors
+#         return Response(data)
 
 class ConfirmAccount(APIView):
     """
@@ -510,7 +512,21 @@ class OrderView(APIView):
                     return JsonResponse({'Status': False, 'Errors': 'Неправильно указаны аргументы'})
                 else:
                     if is_updated:
-                        new_order.send(sender=self.__class__, user_id=request.user.id)
+                        # new_order.send(sender=self.__class__, user_id=request.user.id)
                         return JsonResponse({'Status': True})
 
         return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
+
+
+# Отправка почты
+# from django.conf import settings
+# from django.core.mail import send_mail
+
+
+# send_mail(
+#         'Тема',
+#         'Тело письма',
+#         settings.EMAIL_HOST_USER,
+#         ['173buktop173@gmail.com'],
+#         fail_silently=False,
+#     )
