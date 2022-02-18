@@ -36,10 +36,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'rest_framework.authtoken',
     'django_rest_passwordreset',
-
+    'django.conf',
+    'djoser',
 
     'backend.apps.BackendConfig',
 ]
@@ -131,15 +133,20 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # тут данные ящика, с которого отправляются письма юзерам
 # для GMAIL:
 # https://support.google.com/a/answer/176600?hl=ru#zippy=%2Cкак-использовать-smtp-сервер-gmail
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'djangotest377@gmail.com'
+# EMAIL_HOST_PASSWORD = 'Pa$Sw0rd'
+# EMAIL_PORT = '587'
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+# SERVER_EMAIL = EMAIL_HOST_USER
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-EMAIL_HOST = 'smtp.gmail.ru'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangotest377@gmail.com'
 EMAIL_HOST_PASSWORD = 'Pa$Sw0rd'
-EMAIL_PORT = '587'
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-SERVER_EMAIL = EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_PORT = 587
 
 
 # EMAIL_HOST = 'smtp.mail.ru'
@@ -150,22 +157,62 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # SERVER_EMAIL = EMAIL_HOST_USER
 
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 40,
+#
+#     'DEFAULT_RENDERER_CLASSES': (
+#         'rest_framework.renderers.JSONRenderer',
+#         'rest_framework.renderers.BrowsableAPIRenderer',
+#
+#     ),
+#
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         # 'rest_framework.authentication.SessionAuthentication',
+#         # 'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#
+# }
+
+# https://www.youtube.com/watch?v=ddB83a4jKSY&t=1829s 23:15
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 40,
+    'PAGE_SIZE': 5,
 
-    'DEFAULT_RENDERER_CLASSES': (
+    'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
 
-    ),
-
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    ),
+    ],
 
+    'DEFAULT_PERMISSIONS_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+}
+
+# Настройки DJOSER
+# https://www.youtube.com/watch?v=PC0S1dkRNtg
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,  # создание пользователя с подтверждением email https://www.youtube.com/watch?v=PC0S1dkRNtg 8:20
+    'SERIALIZERS': {},
+
+    'LOGIN_FIELD': 'email',  # регистрация по email
+    'USER_CREATE_PASSWORD_RETYPE': True,  # повторить пароль
+    # 'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    # 'SERIALIZERS': {
+    #     'user_create': 'backend.serializers.UserCreateSerializer',
+    #     'user': 'backend.serializers.UserCreateSerializer',
+    # }
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+

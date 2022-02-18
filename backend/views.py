@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import URLValidator
 from django.db import IntegrityError
 from django.db.models import Q, Sum, F
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from requests import get
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import ListAPIView
@@ -22,6 +22,14 @@ from backend.serializers import UserSerializer, CategorySerializer, ShopSerializ
 # from backend.signals import new_user_registered, new_order
 from django.conf import settings
 from django.core.mail import send_mail
+from .serializers import UserRegSerializer
+
+
+# https://www.youtube.com/watch?v=ddB83a4jKSY&t=1829s 40:40
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
 
 # v1 not working
 class RegisterAccount(APIView):
@@ -74,6 +82,35 @@ class RegisterAccount(APIView):
 #         else:
 #             data = serializer.errors
 #         return Response(data)
+
+
+# v3(T)
+# 17:50 - аутентификация
+#https://www.youtube.com/watch?v=_OhF6FEdIao&list=PLgCYzUzKIBE9Pi8wtx8g55fExDAPXBsbV&index=6
+# 11:10
+class RegistrationView(APIView):
+    def post(self, request):
+        serializer = UserRegSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            user = serializer.save()
+            data['response'] = 'Successfully created a new User'
+            data['user'] = user.email
+        else:
+            data = serializer.errors
+        return Response(data)
+
+
+@permission_classes([IsAuthenticated,])
+class RestrictedApiView(APIView):
+    '''пример для отображения данных в зависимости от типа пользователя'''
+    def get(self, request, *args, **kwargs):
+        if request.user.type == 'buyer':
+            data = f'{request.user}, Вы покупатель'
+        elif request.user.type == 'shop':
+            data = f'{request.user}, Вы продавец'
+        return Response(data)
+
 
 class ConfirmAccount(APIView):
     """
@@ -229,22 +266,24 @@ class BasketView(APIView):
 
         items_sting = request.data.get('items')
         if items_sting:
-            print(items_sting)
             try:
                 items_dict = load_json(items_sting)
             except ValueError:
                 JsonResponse({'Status': False, 'Errors': 'Неверный формат запроса'})
             else:
                 basket, _ = Order.objects.get_or_create(user_id=request.user.id, state='basket')
+                basket.id=1
                 objects_created = 0
                 for order_item in items_dict:
                     order_item.update({'order': basket.id})
                     serializer = OrderItemSerializer(data=order_item)
                     if serializer.is_valid():
+                        print('OK')
                         try:
                             serializer.save()
                         except IntegrityError as error:
-                            return JsonResponse({'Status': False, 'Errors': str(error)})
+                            # return JsonResponse({'Status': False, 'Errors': str(error)})
+                            return JsonResponse({'Status': False, 'Errors': "Исключение"})
                         else:
                             objects_created += 1
 
@@ -285,10 +324,13 @@ class BasketView(APIView):
         if items_sting:
             try:
                 items_dict = load_json(items_sting)
+                print(items_dict)
             except ValueError:
                 JsonResponse({'Status': False, 'Errors': 'Неверный формат запроса'})
             else:
                 basket, _ = Order.objects.get_or_create(user_id=request.user.id, state='basket')
+                # print(basket.id)
+                # basket.id = 1
                 objects_updated = 0
                 for order_item in items_dict:
                     if type(order_item['id']) == int and type(order_item['quantity']) == int:
@@ -360,7 +402,7 @@ class PartnerState(APIView):
             return JsonResponse({'Status': False, 'Error': 'Log in required'}, status=403)
 
         if request.user.type != 'shop':
-            return JsonResponse({'Status': False, 'Error': 'Только для магазинов'}, status=403)
+            return JsonResponse({'Status': False, 'Error': 'Only shops!'}, status=403)
 
         shop = request.user.shop
         serializer = ShopSerializer(shop)
@@ -372,7 +414,7 @@ class PartnerState(APIView):
             return JsonResponse({'Status': False, 'Error': 'Log in required'}, status=403)
 
         if request.user.type != 'shop':
-            return JsonResponse({'Status': False, 'Error': 'Только для магазинов'}, status=403)
+            return JsonResponse({'Status': False, 'Error': 'Only shops!'}, status=403)
         state = request.data.get('state')
         if state:
             try:
@@ -461,11 +503,9 @@ class ContactView(APIView):
     def put(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return JsonResponse({'Status': False, 'Error': 'Log in required'}, status=403)
-
         if 'id' in request.data:
             if request.data['id'].isdigit():
                 contact = Contact.objects.filter(id=request.data['id'], user_id=request.user.id).first()
-                print(contact)
                 if contact:
                     serializer = ContactSerializer(contact, data=request.data, partial=True)
                     if serializer.is_valid():
@@ -499,7 +539,6 @@ class OrderView(APIView):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return JsonResponse({'Status': False, 'Error': 'Log in required'}, status=403)
-
         if {'id', 'contact'}.issubset(request.data):
             if request.data['id'].isdigit():
                 try:
@@ -515,7 +554,7 @@ class OrderView(APIView):
                         # new_order.send(sender=self.__class__, user_id=request.user.id)
                         return JsonResponse({'Status': True})
 
-        return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
+        return JsonResponse({'Status': False, 'Errors': 'Not all arguments'})
 
 
 # Отправка почты
@@ -530,3 +569,6 @@ class OrderView(APIView):
 #         ['173buktop173@gmail.com'],
 #         fail_silently=False,
 #     )
+
+def index(request):
+    return HttpResponse('<h1>Hello!<h1/>')

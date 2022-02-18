@@ -1,0 +1,301 @@
+Documentation Settings
+
+###################################
+1. USERS
+###################################
+
+1.1 POST register user
+###################################
+http://localhost:8000/api/v1/users/
+BODY formdata
+
+Email    yourmail@gmail.com
+password     qwer1234A
+re_password   qwer1234A
+
+Переходим по ссылке из письма, получаем URL:
+                                 uid                  token
+http://127.0.0.1:8000/#/activate/MjA/b10afl-ba961a099b80c03be341613f780d9500
+
+POST подтвердить email
+POST
+http://127.0.0.1:8000/api/v1/users/activation/
+BODY formdata
+uid MjA
+token b10afl-ba961a099b80c03be341613f780d9500
+
+
+
+1.2 POST get token
+##################################
+http://localhost:8000/api/v1/token/login/
+
+BODY formdata
+
+Email    yourmail@gmail.com
+password     qwer1234A
+
+{"auth_token":"a8752c5392ff346efceac9bf85f15eee2c3a5a35"}
+
+1.3 POST del token
+#################################
+http://localhost:8000/api/v1/token/logout/
+HEADERS
+Authorization  Token d9ed45b8733afa436414f80d32ed5a3e3
+
+BODY formdata
+Email    yourmail@gmail.com
+password     qwer1234A
+
+
+1.4 POST PASSWORD RESET (Reset Password Request Token)
+################################
+http://127.0.0.1:8000/api/v1/password_reset
+
+BODY formdata
+Email    yourmail@gmail.com
+
+{"status":"OK"}
+
+
+
+
+1.5 POST PASSWORD RESET CONFIRM
+###############################
+http://localhost:8000/api/v1/password_reset/confirm
+BODY formdata
+
+password  qwerty123
+token  d9ed45b8733afa436414f80d32ed5a3e3
+
+{
+    "detail": "Страница не найдена."
+}
+
+
+
+1.5 GET CONTACT
+###############################
+http://localhost:8000/api/v1/contact
+
+HEADERS
+Authorization  Token d9ed45b8733afa436414f80d32ed5a3e3
+
+
+1.6 POST CONTACT
+###############################
+http://localhost:8000/api/v1/contact
+
+HEADERS
+Authorization  Token d9ed45b8733afa436414f80d32ed5a3e3
+
+BODY formdata
+city  Ufa
+street Lenina
+phone +79874563322
+
+house
+structure
+building
+apartment
+
+
+1.6 DELETE CONTACT
+###############################
+http://127.0.0.1:8000/api/v1/contact/
+
+HEADERS
+Authorization  Token d9ed45b8733afa436414f80d32ed5a3e3
+
+BODY formdata
+items 1,2,3 (id users)
+
+
+1.6 PUT CONTACT
+###############################
+http://127.0.0.1:8000/api/v1/contact/
+
+HEADERS
+Authorization  Token d9ed45b8733afa436414f80d32ed5a3e3
+
+BODY formdata
+id  3
+city  Ufa
+street Lenina
+phone +79874563322
+house 33
+structure 4
+building 1
+apartment 45
+
+{"Status": true}
+
+1.7 POST edit user
+###############################
+http://127.0.0.1:8000/api/v1/user/details/
+
+HEADERS
+Authorization Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+BODYformdata
+first_name имя
+last_name фамилия
+email a@a.ru11
+password qwer1234Aasd
+company DNS
+type shop
+position manager
+
+{"Status": true}
+
+1.7 GET user
+###############################
+http://127.0.0.1:8000/api/v1/user/details/
+
+HEADERS
+Authorization Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+{"id":23,"first_name":"Vikor","last_name":"Viktoroff","email":"top173@gmail.com","company":"dns","type":"shop","position":"manager","contacts":[]}
+
+
+
+
+
+
+
+
+
+#############################################
+2 shop
+#############################################
+
+2.1 GET list shops
+http://localhost:8000/api/v1/shops/
+#############################################
+{"count":1,"next":null,"previous":null,"results":[{"id":1,"name":"Связной","state":true}]}
+
+
+GET искать товары
+#############################################
+http://localhost:8000/api/v1/products/
+
+[{"id":1,"model":"apple/iphone/xs-max","product":{"name":"Смартфон Apple iPhone XS Max 512GB (золотистый)",
+"category":"Смартфоны"},"shop":1,"quantity":14,"price":110000,"price_rrc":116990,"product_parameters":
+[{"parameter":"Диагональ (дюйм)","value":"6.5"},{"parameter":"Разрешение (пикс)","value":"2688x1242"},
+{"parameter":"Встроенная память (Гб)","value":"512"},......
+
+http://localhost:8000/api/v1/products/?shop_id=1&category_id=224&price=65000
+
+
+
+PUT добавить товары в корзину
+#############################################
+http://localhost:8000/api/v1/basket/
+HEADERS
+Authorization    Token e777c8b85f4a664aab792eb2e6d794284134eaea
+
+BODY formdata
+items  [{"id": 5, "product_info": 25, "quantity": 13 }, {"id": 5,"product_info": 26, "quantity": 12}]
+
+{"Status": true, "Обновлено объектов": 1}
+
+
+POST редактировать количество товаров в корзине
+#############################################
+http://localhost:8000/api/v1/basket/
+HEADERS
+Authorization    Token e777c8b85f4a664aab792eb2e6d794284134eaea
+
+BODY formdata
+[{"id": 1, "quantity": 13, "product_info_id":  1}]
+
+{"Status": true, "Создано объектов": 1}
+
+
+DEL удалить из корзины
+#############################################
+http://localhost:8000/api/v1/basket/
+HEADERS
+Authorization  Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+BODYformdata
+items  1
+
+{"Status": true, "Удалено объектов": 1}
+
+
+GET получить мои заказы
+#############################################
+http://example.com:8000/api/v1/order
+
+HEADERS
+Authorization  Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+[]
+
+
+POST разместить заказ
+#############################################
+http://example.com:8000/api/v1/order
+HEADERS
+Authorization Token e777c8b85f4a664aab792eb2e6d794284134eaea
+BODY formdata
+id 4
+contact 5
+
+{"Status": false, "Errors": "Not all arguments"}
+
+
+GET list categories
+#############################################
+http://example.com:8000/api/v1/categories
+
+{"count":3,"next":null,"previous":null,"results":[{"id":224,"name":"Смартфоны"},{"id":15,"name":"Аксессуары"},
+{"id":1,"name":"Flash-накопители"}]}
+
+#############################################
+partner   (только для магазинов)
+#############################################
+
+GET получить статус партнера
+#############################################
+http://localhost:8000/api/v1/partner/state
+HEADERS
+
+Authorization  Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+{"id":1,"name":"Связной","state":true}
+
+POST обновить прайс партнера
+#############################################
+http://localhost:8000/api/v1/partner/update
+
+HEADERS
+Authorization  Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+BODY formdata
+url  https://raw.githubusercontent.com/netology-code/pd-diplom/master/data/shop1.yaml
+
+{"Status": true}
+
+
+GET получить сформированные заказы
+#############################################
+http://localhost:8000/api/v1/partner/orders
+
+HEADERS
+Authorization  Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+[]
+
+POST обновить статус партнера
+#############################################
+http://localhost:8000/api/v1/partner/state
+
+HEADERS
+Authorization Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+BODY formdata
+state on
+
+{"Status": true}

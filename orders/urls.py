@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from backend.views import index
 
 urlpatterns = [
+    # path('', index, name='test'),
     path('admin/', admin.site.urls),
-    path('api/v1/', include('backend.urls', namespace='backend'))
+    path('api/v1/', include('backend.urls', namespace='backend')),
+    path('auth/users/', include('djoser.urls')),
+    path('auth/users/', include('djoser.urls.authtoken')),
+    path('auth/users/', include('djoser.urls.jwt')),
 ]
