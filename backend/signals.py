@@ -1,16 +1,17 @@
 #  https://djangodoc.ru/3.2/topics/signals/
-# from django.conf import settings
-# from django.core.mail import EmailMultiAlternatives
-# from django.dispatch import receiver, Signal
-# from django_rest_passwordreset.signals import reset_password_token_created
-#
-# from backend.models import ConfirmEmailToken, User
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.dispatch import receiver, Signal
+from django_rest_passwordreset.signals import reset_password_token_created
+from backend.models import ConfirmEmailToken, User
 
+# if Django version < 3:
 # new_user_registered = Signal(providing_args=['user_id'],)
 # new_order = Signal(providing_args=['user_id'],)
 
-# new_user_registered = Signal()
-# new_order = Signal()
+# if Django version >= 3:
+new_user_registered = Signal()
+new_order = Signal()
 
 # @receiver(reset_password_token_created)
 # def password_reset_token_created(sender, instance, reset_password_token, **kwargs):
@@ -59,22 +60,22 @@
 #     msg.send()
 
 
-# @receiver(new_order)
-# def new_order_signal(user_id, **kwargs):
-#     """
-#     отправяем письмо при изменении статуса заказа
-#     """
-#     # send an e-mail to the user
-#     user = User.objects.get(id=user_id)
-#
-#     msg = EmailMultiAlternatives(
-#         # title:
-#         f"Обновление статуса заказа",
-#         # message:
-#         'Заказ сформирован',
-#         # from:
-#         settings.EMAIL_HOST_USER,
-#         # to:
-#         [user.email]
-#     )
-#     msg.send()
+@receiver(new_order)
+def new_order_signal(user_id, **kwargs):
+    """
+    отправяем письмо при изменении статуса заказа
+    """
+    # send an e-mail to the user
+    user = User.objects.get(id=user_id)
+
+    msg = EmailMultiAlternatives(
+        # title:
+        f"Обновление статуса заказа",
+        # message:
+        'Заказ сформирован',
+        # from:
+        settings.EMAIL_HOST_USER,
+        # to:
+        [user.email]
+    )
+    msg.send()

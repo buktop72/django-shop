@@ -20,6 +20,7 @@ from backend.models import Shop, Category, Product, ProductInfo, Parameter, Prod
 from backend.serializers import UserSerializer, CategorySerializer, ShopSerializer, ProductInfoSerializer, \
     OrderItemSerializer, OrderSerializer, ContactSerializer
 # from backend.signals import new_user_registered, new_order
+from backend.signals import new_order
 from django.conf import settings
 from django.core.mail import send_mail
 from .serializers import UserRegSerializer
@@ -542,16 +543,20 @@ class OrderView(APIView):
         if {'id', 'contact'}.issubset(request.data):
             if request.data['id'].isdigit():
                 try:
+                    print(request.user.id)
+                    print(request.data['contact'])
+                    print(request.data['id'])
                     is_updated = Order.objects.filter(
-                        user_id=request.user.id, id=request.data['id']).update(
-                        contact_id=request.data['contact'],
-                        state='new')
+                        user_id=request.user.id,
+                        id=request.data['id']).update(contact_id=request.data['contact'], state='new')
+                    print("is_updated!", is_updated)
                 except IntegrityError as error:
                     print(error)
                     return JsonResponse({'Status': False, 'Errors': 'Неправильно указаны аргументы'})
                 else:
                     if is_updated:
-                        # new_order.send(sender=self.__class__, user_id=request.user.id)
+                        print("is_updated")
+                        new_order.send(sender=self.__class__, user_id=request.user.id)
                         return JsonResponse({'Status': True})
 
         return JsonResponse({'Status': False, 'Errors': 'Not all arguments'})

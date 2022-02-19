@@ -234,16 +234,22 @@ Authorization  Token db15687dbc6b7cef700eea80614edaa4c425560c
 []
 
 
-POST разместить заказ
+POST Разместить заказ
 #############################################
-http://example.com:8000/api/v1/order
-HEADERS
-Authorization Token e777c8b85f4a664aab792eb2e6d794284134eaea
-BODY formdata
-id 4
-contact 5
+http://localhost:8000/api/v1/order/
 
-{"Status": false, "Errors": "Not all arguments"}
+HEADERS
+Authorization Token db15687dbc6b7cef700eea80614edaa4c425560c
+
+BODY formdata
+id - 3 (заказа)
+contact - 4
+
+{"Status": true}
+djangotest377@gmail.com
+09:51 (15 минут назад)
+Заказ сформирован
+
 
 
 GET list categories
@@ -299,3 +305,6 @@ BODY formdata
 state on
 
 {"Status": true}
+
+
+
