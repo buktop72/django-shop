@@ -32,7 +32,7 @@ from rest_framework.permissions import IsAuthenticated
 
 
 
-# v1 not working
+# v1
 class RegisterAccount(APIView):
     """
     Для регистрации покупателей
@@ -71,21 +71,7 @@ class RegisterAccount(APIView):
 
         return JsonResponse({'Status': False, 'Errors': 'Не указаны все необходимые аргументы'})
 
-# v2
-# class RegisterAccount(APIView):
-#     def post(self, request):
-#         serializer = UserSerializer(data=request.data)
-#         data = {}
-#         if serializer.is_valid():
-#             user = serializer.save()
-#             data['response'] = 'Successfully created a new User'
-#             data['user'] = user.email
-#         else:
-#             data = serializer.errors
-#         return Response(data)
 
-
-# v3(T)
 # 17:50 - аутентификация
 #https://www.youtube.com/watch?v=_OhF6FEdIao&list=PLgCYzUzKIBE9Pi8wtx8g55fExDAPXBsbV&index=6
 # 11:10
@@ -562,18 +548,6 @@ class OrderView(APIView):
         return JsonResponse({'Status': False, 'Errors': 'Not all arguments'})
 
 
-# Отправка почты
-# from django.conf import settings
-# from django.core.mail import send_mail
-
-
-# send_mail(
-#         'Тема',
-#         'Тело письма',
-#         settings.EMAIL_HOST_USER,
-#         ['173buktop173@gmail.com'],
-#         fail_silently=False,
-#     )
-
+# проверка маршрутов
 def index(request):
     return HttpResponse('<h1>Hello!<h1/>')

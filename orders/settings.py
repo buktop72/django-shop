@@ -128,33 +128,18 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'backend.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_USE_TLS = True
 
 # тут данные ящика, с которого отправляются письма юзерам
 # для GMAIL:
 # https://support.google.com/a/answer/176600?hl=ru#zippy=%2Cкак-использовать-smtp-сервер-gmail
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'djangotest377@gmail.com'
-# EMAIL_HOST_PASSWORD = 'Pa$Sw0rd'
-# EMAIL_PORT = '587'
-# EMAIL_USE_TLS = True
-# EMAIL_USE_SSL = False
-# SERVER_EMAIL = EMAIL_HOST_USER
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'djangotest377@gmail.com'
 EMAIL_HOST_PASSWORD = 'Pa$Sw0rd'
 EMAIL_PORT = 587
-
-
-# EMAIL_HOST = 'smtp.mail.ru'
-# EMAIL_HOST_USER = 'netology-pdiplom@mail.ru'
-# EMAIL_HOST_PASSWORD = 'i~8W4rdRPFlo'
-# EMAIL_PORT = '465'
-# EMAIL_USE_SSL = True
 # SERVER_EMAIL = EMAIL_HOST_USER
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 
 # REST_FRAMEWORK = {
