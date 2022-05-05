@@ -14,7 +14,7 @@ goods:
     name: Смартфон Apple iPhone XR 256GB (зеленый)
     price: 65000
     price_rrc: 69990
-    quantity: десять
+    quantity: 100
     parameters:
       "Диагональ (дюйм)": 6.1
       "Разрешение (пикс)": 1792x828
