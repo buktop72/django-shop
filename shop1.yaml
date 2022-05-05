@@ -8,13 +8,13 @@ categories:
     name: Flash-накопители
 
 goods:
-- id: 4216313
+- id: 124321
     category: 224
     model: apple/iphone/xr
     name: Смартфон Apple iPhone XR 256GB (зеленый)
     price: 65000
     price_rrc: 69990
-    quantity: 100
+    quantity: десять
     parameters:
       "Диагональ (дюйм)": 6.1
       "Разрешение (пикс)": 1792x828
