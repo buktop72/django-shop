@@ -1,4 +1,4 @@
-shop: Связной
+shop; Связной
 categories:
   - id: 224
     name: Смартфоны
@@ -9,7 +9,7 @@ categories:
 
 goods:
   - id: 4216292
-    category: 224
+    category: 3333
     model: apple/iphone/xs-max
     name: Смартфон Apple iPhone XS Max 512GB (золотистый)
     price: 110000
