@@ -1,4 +1,4 @@
-shop: DNS
+shop: Roga & Kopyta
 categories:
   - id: 224
     name: Смартфоны
@@ -14,7 +14,7 @@ goods:
     name: Смартфон Apple iPhone XS Max 512GB (золотистый)
     price: 110000
     price_rrc: 116990
-    quantity: сто
+    quantity: 14
     parameters:
       "Диагональ (дюйм)": 6.5
       "Разрешение (пикс)": 2688x1242
@@ -56,4 +56,3 @@ goods:
       "Разрешение (пикс)": 1792x828
       "Встроенная память (Гб)": 256
       "Цвет": синий
-
